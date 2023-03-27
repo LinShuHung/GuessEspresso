@@ -6,4 +6,9 @@
     <string name="you_got_it">You got it!!!</string>
     <string name="please_input_a_number">Please input a number(1-30)</string>
     <string name="guess">Guess</string>
+    <string name="guess_result">Guess Result</string>
+    <string name="ok">Ok</string>
+    <string name="reset_game">Reset Game</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="cancel">Cancel</string>
 </resources>

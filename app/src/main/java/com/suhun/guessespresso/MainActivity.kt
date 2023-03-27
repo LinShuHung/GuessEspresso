@@ -10,12 +10,16 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import com.suhun.guessespresso.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    val tag:String = MainActivity::class.java.simpleName
+    val secretNumber:SecretNumber = SecretNumber()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -26,10 +30,15 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab)
-                .setAction("Action", null).show()
+        binding.fab.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.reset_game))
+                .setMessage(getString(R.string.are_you_sure))
+                .setPositiveButton(getString(R.string.ok), {dialog, which->
+                    guessResetProcess()
+                })
+                .setNeutralButton(getString(R.string.cancel), null)
+                .show()
         }
     }
 
@@ -47,5 +56,29 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun guessResetProcess(){
+        binding.contentLayout.userInputEditText.text = null
+        binding.contentLayout.counterTextView.text = "0"
+        secretNumber.resetAll()
+    }
+
+    fun guessVerify(view:View){
+        var userInput:Int = binding.contentLayout.userInputEditText.text.toString().toInt()
+        val message:String = secretNumber.verifyResult(resources, userInput)
+        var bingo:Boolean = if(secretNumber.verify(userInput)==0) true else false
+
+        binding.contentLayout.counterTextView.text = secretNumber.guessCounter.toString()
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.guess_result))
+            .setMessage(message).setPositiveButton(getString(R.string.ok),{dialog, which->
+                if(bingo){
+                    //design latter
+                }else{
+                    binding.contentLayout.userInputEditText.text = null
+                }
+            })
+            .show()
     }
 }
