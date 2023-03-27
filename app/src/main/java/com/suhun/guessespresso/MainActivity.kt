@@ -59,9 +59,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun guessResetProcess(){
+        secretNumber.resetAll()
         binding.contentLayout.userInputEditText.text = null
         binding.contentLayout.counterTextView.text = "0"
-        secretNumber.resetAll()
     }
 
     fun guessVerify(view:View){

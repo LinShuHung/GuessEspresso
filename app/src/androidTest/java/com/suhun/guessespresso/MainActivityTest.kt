@@ -38,5 +38,12 @@ class MainActivityTest {
             Espresso.onView(ViewMatchers.withText("Ok")).perform(ViewActions.click())
         }
     }
+
+    @Test
+    fun fabButtontest(){
+        Espresso.onView(ViewMatchers.withId(R.id.fab)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText("Ok")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.counterTextView)).check(ViewAssertions.matches(ViewMatchers.withText("0")))
+    }
 }
 
