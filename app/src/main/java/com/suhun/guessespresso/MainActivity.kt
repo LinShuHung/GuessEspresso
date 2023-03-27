@@ -1,5 +1,6 @@
 package com.suhun.guessespresso
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -75,6 +76,9 @@ class MainActivity : AppCompatActivity() {
             .setMessage(message).setPositiveButton(getString(R.string.ok),{dialog, which->
                 if(bingo){
                     //design latter
+                    var intent:Intent = Intent(this, RecordActivity::class.java)
+                    intent.putExtra("COUNT", secretNumber.guessCounter)
+                    startActivity(intent)
                 }else{
                     binding.contentLayout.userInputEditText.text = null
                 }
