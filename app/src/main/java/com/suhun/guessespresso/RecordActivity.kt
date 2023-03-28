@@ -27,6 +27,7 @@ class RecordActivity : AppCompatActivity() {
                 .edit()
                 .putString("SCORT", tempScort)
                 .apply()
+            setResult(RESULT_OK)
             finish()
         }
     }

@@ -12,6 +12,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.appcompat.app.AlertDialog
 import com.suhun.guessespresso.databinding.ActivityMainBinding
 
@@ -19,8 +23,17 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private var startActivityResultLauncher:ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult(), ActivityResultCallback {
+            if(it.resultCode == RESULT_OK){
+                guessResetProcess()
+            }
+        })
     val tag:String = MainActivity::class.java.simpleName
     val secretNumber:SecretNumber = SecretNumber()
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -32,14 +45,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.fab.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle(getString(R.string.reset_game))
-                .setMessage(getString(R.string.are_you_sure))
-                .setPositiveButton(getString(R.string.ok), {dialog, which->
-                    guessResetProcess()
-                })
-                .setNeutralButton(getString(R.string.cancel), null)
-                .show()
+            guessResetProcess()
         }
     }
 
@@ -60,9 +66,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun guessResetProcess(){
-        secretNumber.resetAll()
-        binding.contentLayout.userInputEditText.text = null
-        binding.contentLayout.counterTextView.text = "0"
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.reset_game))
+            .setMessage(getString(R.string.are_you_sure))
+            .setPositiveButton(getString(R.string.ok), {dialog, which->
+                secretNumber.resetAll()
+                binding.contentLayout.userInputEditText.text = null
+                binding.contentLayout.counterTextView.text = "0"
+            })
+            .setNeutralButton(getString(R.string.cancel), null)
+            .show()
     }
 
     fun guessVerify(view:View){
@@ -78,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                     //design latter
                     var intent:Intent = Intent(this, RecordActivity::class.java)
                     intent.putExtra("COUNT", secretNumber.guessCounter)
-                    startActivity(intent)
+                    startActivityResultLauncher.launch(intent)
                 }else{
                     binding.contentLayout.userInputEditText.text = null
                 }
